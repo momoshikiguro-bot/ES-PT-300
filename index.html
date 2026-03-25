@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ES × PT Tracker — 10 Bulan</title>
+  <meta name="description" content="Program intensif belajar Spanyol & Portugis 10 bulan" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #0d0d0d; font-family: Georgia, serif; }
+    button { cursor: pointer; }
+    ::-webkit-scrollbar { width: 6px; } 
+    ::-webkit-scrollbar-track { background: #111; }
+    ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+
+const PHASES = [
+  { id: 1, months: [1, 2], label: "Fondasi Ganda", color: "#E8643A" },
+  { id: 2, months: [3, 4], label: "Ekspansi & Struktur", color: "#2E86AB" },
+  { id: 3, months: [5, 6], label: "Imersi & Fluensi", color: "#5C4084" },
+  { id: 4, months: [7, 8], label: "Pendalaman", color: "#2A9D5C" },
+  { id: 5, months: [9, 10], label: "Uji Nyata", color: "#D4A017" },
+];
+
+const DAY_TASKS = {
+  1: {
+    0: [
+      { lang: "🇪🇸", tag: "Spanyol", task: "Anki 20 menit — kosakata baru (target: +10 kata)", duration: 20 },
+      { lang: "🇪🇸", tag: "Spanyol", task: "Duolingo 15 menit — unit dasar", duration: 15 },
+      { lang: "🇪🇸", tag: "Spanyol", task: "Latih pronunciation: vokal a,e,i,o,u + r bergulir", duration: 15 },
+    ],
+    1: [
+      { lang: "🇧🇷", tag: "Portugis", task: "Anki 20 menit — kosakata baru (target: +10 kata)", duration: 20 },
+      { lang: "🇧🇷", tag: "Portugis", task: "Duolingo 15 menit — unit dasar", duration: 15 },
+      { lang: "🇧🇷", tag: "Portugis", task: "Latih nasal vowels: ão, ã, em, im — dengar & tiru", duration: 15 },
+    ],
+    2: [
+      { lang: "⚡", tag: "Perbandingan", task: "Tulis 20 kata mirip ES & PT (cognates) — catat perbedaannya", duration: 20 },
+      { lang: "⚡", tag: "Perbandingan", task: "Buat tabel: ser/estar ES vs ser/estar PT", duration: 20 },
+      { lang: "⚡", tag: "Perbandingan", task: "Review semua vocab minggu ini kedua bahasa", duration: 20 },
+    ],
+    3: [
+      { lang: "🇪🇸", tag: "Spanyol", task: "Anki 20 menit — review + kartu baru", duration: 20 },
+      { lang: "🇪🇸", tag: "Spanyol", task: "SpanishPod101: 1 episode A1 + catat 5 frasa baru", duration: 25 },
+      { lang: "🇪🇸", tag: "Spanyol", task: "Hafal salam & perkenalan diri lengkap", duration: 15 },
+    ],
+    4: [
+      { lang: "🇧🇷", tag: "Portugis", task: "Anki 20 menit — review + kartu baru", duration: 20 },
+      { lang: "🇧🇷", tag: "Portugis", task: "PortuguesePod101: 1 episode A1 + catat 5 frasa baru", duration: 25 },
+      { lang: "🇧🇷", tag: "Portugis", task: "Hafal salam & perkenalan diri lengkap dalam PT", duration: 15 },
+    ],
+    5: [
+      { lang: "🎬", tag: "Input Fun", task: "Nonton 1 episode konten ES dengan subtitle Inggris", duration: 30 },
+      { lang: "🎬", tag: "Input Fun", task: "Catat 10 kata/frasa baru yang muncul di video", duration: 15 },
+      { lang: "🎬", tag: "Input Fun", task: "Masukkan semua kata baru ke Anki", duration: 15 },
+    ],
+    6: [
+      { lang: "📝", tag: "Review", task: "Anki full review kedua bahasa", duration: 25 },
+      { lang: "📝", tag: "Review", task: "Ulangi semua dialog/percakapan yang dipelajari minggu ini", duration: 20 },
+      { lang: "📝", tag: "Review", task: "Tulis 5 kalimat sederhana dalam ES dan 5 dalam PT", duration: 20 },
+    ],
+  },
+  2: {
+    0: [
+      { lang: "🇪🇸", tag: "Spanyol", task: "Anki 20 menit + Language Transfer: Complete Spanish (lanjut episode)", duration: 30 },
+      { lang: "🇪🇸", tag: "Spanyol", task: "Latihan Preterite tense: konjugasikan 10 kata kerja umum", duration: 20 },
+      { lang: "🇪🇸", tag: "Spanyol", task: "Tulis 3 kalimat tentang apa yang kamu lakukan kemarin", duration: 15 },
+    ],
+    1: [
+      { lang: "🇧🇷", tag: "Portugis", task: "Anki 20 menit + Pimsleur Portuguese: 1 unit audio", duration: 30 },
+      { lang: "🇧🇷", tag: "Portugis", task: "Latihan Pretérito Perfeito: konjugasikan 10 kata kerja", duration: 20 },
+      { lang: "🇧🇷", tag: "Portugis", task: "Tulis 3 kalimat tentang apa yang kamu lakukan kemarin (PT)", duration: 15 },
+    ],
+    2: [
+      { lang: "✍️", tag: "Writing", task: "Tulis 1 paragraf (5-7 kalimat) dalam Spanyol — topik bebas", duration: 20 },
+      { lang: "✍️", tag: "Writing", task: "Tulis 1 paragraf (5-7 kalimat) dalam Portugis — topik yang sama", duration: 20 },
+      { lang: "✍️", tag: "Writing", task: "Bandingkan: bagian mana yang berbeda? Catat pola baru", duration: 15 },
+    ],
+    3: [
+      { lang: "🇪🇸", tag: "Spanyol", task: "Anki 20 menit + Language Transfer lanjutan", duration: 30 },
+      { lang: "🇪🇸", tag: "Spanyol", task: "Pelajari Imperfect tense — perbedaan dengan Preterite", duration: 20 },
+      { lang: "🇪🇸", tag: "Spanyol", task: "Dengarkan podcast SpanishObsessed 1 episode", duration: 25 },
+    ],
+    4: [
+      { lang: "🇧🇷", tag: "Portugis", task: "Anki 20 menit + Pimsleur lanjutan", duration: 30 },
+      { lang: "🇧🇷", tag: "Portugis", task: "Pelajari Imperfeito — perbedaan dengan Perfeito", duration: 20 },
+      { lang: "🇧🇷", tag: "Portugis", task: "Dengarkan podcast Fala Gringo 1 episode", duration: 25 },
+    ],
+    5: [
+      { lang: "🗣️", tag: "Speaking", task: "Sesi Italki/Tandem 30 menit — Spanyol", duration: 35 },
+      { lang: "🗣️", tag: "Speaking", task: "Setelah sesi: catat 5 koreksi atau kata baru", duration: 10 },
+      { lang: "🎧", tag: "Listening", task: "Dengarkan podcast intermediate 20 menit sambil mencatat", duration: 25 },
+    ],
+    6: [
+      { lang: "📝", tag: "Review", task: "Anki full review", duration: 25 },
+      { lang: "🗣️", tag: "Speaking", task: "Sesi Italki/Tandem 30 menit — Portugis", duration: 35 },
+      { lang: "📝", tag: "Review", task: "Tulis jurnal singkat minggu ini: apa yang dipelajari?", duration: 15 },
+    ],
+  },
+  3: {
+    0: [
+      { lang: "🇪🇸", tag: "Spanyol", task: "Baca artikel berita ringan dalam Spanyol — catat kata baru", duration: 25 },
+      { lang: "🇪🇸", tag: "Spanyol", task: "Anki 20 menit", duration: 20 },
+      { lang: "🇪🇸", tag: "Spanyol", task: "Dreaming Spanish: 1 video comprehensible input", duration: 20 },
+    ],
+    1: [
+      { lang: "🇧🇷", tag: "Portugis", task: "Nonton 1 episode Netflix konten PT (pakai Language Reactor)", duration: 30 },
+      { lang: "🇧🇷", tag: "Portugis", task: "Anki 20 menit", duration: 20 },
+      { lang: "🇧🇷", tag: "Portugis", task: "Catat 10 ekspresi/idiom baru dari konten yang ditonton", duration: 15 },
+    ],
+    2: [
+      { lang: "📞", tag: "Speaking", task: "Sesi Italki 45 menit — Spanyol (topik: pengalaman pribadi)", duration: 50 },
+      { lang: "📞", tag: "Speaking", task: "Review catatan dari sesi + tambah ke Anki", duration: 15 },
+      { lang: "🇪🇸", tag: "Spanyol", task: "Shadowing 10 menit dari klip yang didengarkan", duration: 10 },
+    ],
+    3: [
+      { lang: "🇪🇸", tag: "Spanyol", task: "Baca 20 menit dari buku ringan dalam ES (graded reader B1)", duration: 25 },
+      { lang: "🇪🇸", tag: "Spanyol", task: "Anki 20 menit", duration: 20 },
+      { lang: "🇪🇸", tag: "Spanyol", task: "Latihan Subjunctive mood: 10 kalimat latihan", duration: 20 },
+    ],
+    4: [
+      { lang: "🇧🇷", tag: "Portugis", task: "Tonton YouTube berbahasa PT sesuai minat kamu (30 mnt)", duration: 30 },
+      { lang: "🇧🇷", tag: "Portugis", task: "Anki 20 menit", duration: 20 },
+      { lang: "🇧🇷", tag: "Portugis", task: "Catat perbedaan aksen Brasil vs Portugal dari video", duration: 10 },
+    ],
+    5: [
+      { lang: "🎙️", tag: "Shadowing", task: "Pilih 1 klip native speaker ES (2-3 mnt) — shadow berulang", duration: 30 },
+      { lang: "🎙️", tag: "Shadowing", task: "Rekam dirimu — bandingkan dengan aslinya", duration: 15 },
+      { lang: "🎙️", tag: "Shadowing", task: "Lakukan hal yang sama untuk PT", duration: 30 },
+    ],
+    6: [
+      { lang: "📓", tag: "Journaling", task: "Tulis jurnal 1 halaman dalam Spanyol ATAU Portugis (bergantian)", duration: 25 },
+      { lang: "📝", tag: "Review", task: "Anki full review", duration: 25 },
+      { lang: "📞", tag: "Speaking", task: "Sesi Italki 45 menit — Portugis (topik: film/konten favorit)", duration: 50 },
+    ],
+  },
+  4: {
+    0: [
+      { lang: "🇪🇸", tag: "Spanyol", task: "Mock test DELE B2 — 1 bagian (baca atau dengar)", duration: 40 },
+      { lang: "🇪🇸", tag: "Spanyol", task: "Anki 20 menit — fokus advanced vocab", duration: 20 },
+      { lang: "🇪🇸", tag: "Spanyol", task: "Pelajari Subjunctive II (past subjunctive)", duration: 20 },
+    ],
+    1: [
+      { lang: "🇧🇷", tag: "Portugis", task: "Latihan CELPE-Bras — 1 bagian tes", duration: 40 },
+      { lang: "🇧🇷", tag: "Portugis", task: "Anki 20 menit — business/formal vocabulary", duration: 20 },
+      { lang: "🇧🇷", tag: "Portugis", task: "Baca artikel berita/opini dalam PT — tulis ringkasan", duration: 20 },
+    ],
+    2: [
+      { lang: "🧠", tag: "Deep Dive", task: "Pilih 1 topik minggu ini (politik/sains/seni) — baca ES & PT", duration: 30 },
+      { lang: "🧠", tag: "Deep Dive", task: "Tulis esai pendek 150 kata dalam ES tentang topik tersebut", duration: 25 },
+      { lang: "🧠", tag: "Deep Dive", task: "Tulis esai pendek 150 kata dalam PT tentang topik yang sama", duration: 25 },
+    ],
+    3: [
+      { lang: "🇪🇸", tag: "Spanyol", task: "SpanishObsessed advanced — 1 episode", duration: 30 },
+      { lang: "🇪🇸", tag: "Spanyol", task: "Anki 20 menit", duration: 20 },
+      { lang: "🇪🇸", tag: "Spanyol", task: "Latihan DELE: writing task — argumentative essay", duration: 30 },
+    ],
+    4: [
+      { lang: "🇧🇷", tag: "Portugis", task: "Língua da Gente podcast advanced — 1 episode + rangkuman", duration: 30 },
+      { lang: "🇧🇷", tag: "Portugis", task: "Anki 20 menit", duration: 20 },
+      { lang: "🇧🇷", tag: "Portugis", task: "Latihan CELPE-Bras: oral response simulation", duration: 25 },
+    ],
+    5: [
+      { lang: "🤝", tag: "Tandem", task: "Tandem partner: 30 mnt ES (kamu bantu mereka bahasa Indo/Inggris)", duration: 35 },
+      { lang: "🤝", tag: "Tandem", task: "Tandem partner: 30 mnt PT (bergantian)", duration: 35 },
+      { lang: "📝", tag: "Review", task: "Anki 20 menit", duration: 20 },
+    ],
+    6: [
+      { lang: "📊", tag: "Error Tracking", task: "Kumpulkan semua koreksi dari minggu ini — buat daftar error", duration: 20 },
+      { lang: "📊", tag: "Error Tracking", task: "Buat drill khusus untuk error yang paling sering", duration: 20 },
+      { lang: "📝", tag: "Review", task: "Anki full review + tambah kartu dari error tracking", duration: 25 },
+    ],
+  },
+  5: {
+    0: [
+      { lang: "🇪🇸", tag: "Spanyol", task: "Buat konten: tulis thread Twitter/IG dalam Spanyol", duration: 25 },
+      { lang: "🇪🇸", tag: "Spanyol", task: "Anki 20 menit — maintenance vocab", duration: 20 },
+      { lang: "🇪🇸", tag: "Spanyol", task: "Baca 30 mnt dari novel/non-fiksi ES asli", duration: 30 },
+    ],
+    1: [
+      { lang: "🇧🇷", tag: "Portugis", task: "Gabung forum/komunitas online PT — buat 1 komentar/post", duration: 20 },
+      { lang: "🇧🇷", tag: "Portugis", task: "Anki 20 menit — maintenance vocab", duration: 20 },
+      { lang: "🇧🇷", tag: "Portugis", task: "Tonton konten PT tanpa subtitle — uji pemahaman", duration: 30 },
+    ],
+    2: [
+      { lang: "🎤", tag: "Presentasi", task: "Rekam dirimu bicara 5 menit dalam Spanyol — topik bebas", duration: 20 },
+      { lang: "🎤", tag: "Presentasi", task: "Dengarkan rekamanmu — catat hal yang perlu diperbaiki", duration: 15 },
+      { lang: "🎤", tag: "Presentasi", task: "Rekam lagi dalam Portugis — topik yang sama", duration: 20 },
+    ],
+    3: [
+      { lang: "🇪🇸", tag: "Spanyol", task: "HelloTalk: posting dalam ES, minta koreksi dari native", duration: 20 },
+      { lang: "🇪🇸", tag: "Spanyol", task: "Anki 20 menit", duration: 20 },
+      { lang: "🇪🇸", tag: "Spanyol", task: "Sesi Italki advanced: debat/diskusi topik kontroversial", duration: 45 },
+    ],
+    4: [
+      { lang: "🇧🇷", tag: "Portugis", task: "HelloTalk: posting dalam PT, minta koreksi dari native", duration: 20 },
+      { lang: "🇧🇷", tag: "Portugis", task: "Anki 20 menit", duration: 20 },
+      { lang: "🇧🇷", tag: "Portugis", task: "Sesi Italki advanced: presentasi topik keahlianmu", duration: 45 },
+    ],
+    5: [
+      { lang: "📚", tag: "Baca Buku", task: "Baca 45 mnt dari novel ES asli — catat idiom unik", duration: 45 },
+      { lang: "📚", tag: "Baca Buku", task: "Baca 45 mnt dari buku PT asli — catat ekspresi khas", duration: 45 },
+    ],
+    6: [
+      { lang: "🔄", tag: "Maintenance", task: "Anki full review — pastikan semua kartu tetap aktif", duration: 30 },
+      { lang: "🔄", tag: "Maintenance", task: "Tulis refleksi: seberapa jauh kemajuanmu sejak bulan 1?", duration: 20 },
+      { lang: "🔄", tag: "Maintenance", task: "Rencanakan bulan berikutnya: apa yang perlu ditingkatkan?", duration: 15 },
+    ],
+  },
+};
+
+const TOTAL_DAYS = 300;
+const DAY_NAMES = ["Senin","Selasa","Rabu","Kamis","Jumat","Sabtu","Minggu"];
+
+function getPhase(month) { return PHASES.find(p => p.months.includes(month)) || PHASES[0]; }
+function getPhaseId(month) { return getPhase(month).id; }
+function getDayTasks(month, dow) { return DAY_TASKS[getPhaseId(month)]?.[dow] || []; }
+function getDayOfWeek(d) { return (d - 1) % 7; }
+function getMonth(d) { return Math.min(10, Math.ceil(d / 30)); }
+function loadLS(key, fb) { try { const v = localStorage.getItem(key); return v !== null ? JSON.parse(v) : fb; } catch { return fb; } }
+function saveLS(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch {} }
+
+function ConfirmModal({ message, onConfirm, onCancel, color }) {
+  return (
+    <div style={{ position:"fixed",inset:0,background:"rgba(0,0,0,0.85)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:1000,padding:"20px" }}>
+      <div style={{ background:"#1a1a1a",border:`1px solid ${color}44`,borderRadius:"16px",padding:"28px",maxWidth:"300px",width:"100%",textAlign:"center" }}>
+        <div style={{ fontSize:"32px",marginBottom:"12px" }}>⚠️</div>
+        <p style={{ color:"#ddd",fontSize:"15px",lineHeight:1.6,marginBottom:"24px" }}>{message}</p>
+        <div style={{ display:"flex",gap:"10px" }}>
+          <button onClick={onCancel} style={{ flex:1,padding:"12px",borderRadius:"8px",border:"1px solid #333",background:"transparent",color:"#999",fontFamily:"inherit",fontSize:"14px" }}>Batal</button>
+          <button onClick={onConfirm} style={{ flex:1,padding:"12px",borderRadius:"8px",border:"none",background:color,color:"#fff",fontFamily:"inherit",fontSize:"14px",fontWeight:"600" }}>Reset</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function App() {
+  const [currentDay, setCurrentDay] = React.useState(() => loadLS("est-day", 1));
+  const [completed, setCompleted] = React.useState(() => loadLS("est-completed", {}));
+  const [view, setView] = React.useState("day");
+  const [showReset, setShowReset] = React.useState(false);
+  const [justCompleted, setJustCompleted] = React.useState(false);
+
+  function persist(comp, day) { saveLS("est-completed", comp); saveLS("est-day", day); }
+
+  function toggleTask(day, idx) {
+    const key = `${day}-${idx}`;
+    const next = { ...completed, [key]: !completed[key] };
+    if (!next[key]) delete next[key];
+    setCompleted(next);
+    persist(next, currentDay);
+    const tasks = getDayTasks(getMonth(day), getDayOfWeek(day));
+    if (tasks.every((_, i) => next[`${day}-${i}`])) setJustCompleted(true);
+  }
+
+  function goToDay(d) {
+    const c = Math.max(1, Math.min(TOTAL_DAYS, d));
+    setCurrentDay(c); persist(completed, c); setJustCompleted(false);
+  }
+
+  function doReset() {
+    setCompleted({}); setCurrentDay(1); setJustCompleted(false); setShowReset(false);
+    saveLS("est-completed", {}); saveLS("est-day", 1);
+  }
+
+  function dayCompleted(day) {
+    const tasks = getDayTasks(getMonth(day), getDayOfWeek(day));
+    return tasks.length > 0 && tasks.every((_, i) => completed[`${day}-${i}`]);
+  }
+  function dayProgress(day) {
+    const tasks = getDayTasks(getMonth(day), getDayOfWeek(day));
+    if (!tasks.length) return 0;
+    return tasks.filter((_, i) => completed[`${day}-${i}`]).length / tasks.length;
+  }
+
+  const daysCompleted = Array.from({length:TOTAL_DAYS},(_,i)=>i+1).filter(dayCompleted).length;
+  const streak = (() => { let s=0; for(let d=currentDay;d>=1;d--){if(dayCompleted(d))s++;else break;} return s; })();
+  const month = getMonth(currentDay);
+  const phase = getPhase(month);
+  const dow = getDayOfWeek(currentDay);
+  const tasks = getDayTasks(month, dow);
+  const todayDone = tasks.filter((_,i) => completed[`${currentDay}-${i}`]).length;
+  const totalMin = tasks.reduce((s,t)=>s+t.duration,0);
+  const doneMin = tasks.filter((_,i)=>completed[`${currentDay}-${i}`]).reduce((s,t)=>s+t.duration,0);
+  const pc = phase.color;
+
+  return (
+    <div style={{ fontFamily:"Georgia,serif",background:"#0d0d0d",minHeight:"100vh",color:"#f0ece4" }}>
+      {showReset && <ConfirmModal message="Hapus semua progress dan mulai dari Hari 1 lagi?" onConfirm={doReset} onCancel={()=>setShowReset(false)} color={pc} />}
+      <div style={{ maxWidth:"480px",margin:"0 auto" }}>
+
+        {/* TOP BAR */}
+        <div style={{ background:"#111",borderBottom:"1px solid #222",padding:"16px 20px" }}>
+          <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center" }}>
+            <div>
+              <div style={{ fontSize:"10px",letterSpacing:"3px",color:"#555",textTransform:"uppercase" }}>Program Intensif</div>
+              <div style={{ fontSize:"18px",letterSpacing:"-0.5px" }}>
+                <span style={{ color:"#E8643A" }}>ES</span> × <span style={{ color:"#2E86AB" }}>PT</span>
+                <span style={{ color:"#555",fontSize:"13px",marginLeft:"8px" }}>10 Bulan</span>
+              </div>
+            </div>
+            <div style={{ display:"flex",gap:"6px",alignItems:"center" }}>
+              {["day","overview"].map(v=>(
+                <button key={v} onClick={()=>setView(v)} style={{ padding:"6px 12px",borderRadius:"100px",border:view===v?`1px solid ${pc}`:"1px solid #333",background:view===v?pc:"transparent",color:view===v?"#fff":"#777",fontSize:"11px",fontFamily:"inherit",letterSpacing:"1px" }}>
+                  {v==="day"?"Hari Ini":"Overview"}
+                </button>
+              ))}
+              <button onClick={()=>setShowReset(true)} title="Reset" style={{ width:"32px",height:"32px",borderRadius:"50%",border:"1px solid #2a2a2a",background:"transparent",color:"#555",fontSize:"15px",fontFamily:"inherit" }}>↺</button>
+            </div>
+          </div>
+          <div style={{ display:"flex",gap:"10px",marginTop:"14px" }}>
+            {[{label:"Hari",value:`${currentDay}/${TOTAL_DAYS}`},{label:"Selesai",value:`${daysCompleted} hr`},{label:"Streak",value:`🔥 ${streak}`},{label:"Progress",value:`${Math.round((currentDay/TOTAL_DAYS)*100)}%`}].map(s=>(
+              <div key={s.label} style={{ flex:1,textAlign:"center",background:"#1a1a1a",borderRadius:"8px",padding:"8px 2px" }}>
+                <div style={{ fontSize:"13px",fontWeight:"600",color:"#eee" }}>{s.value}</div>
+                <div style={{ fontSize:"9px",color:"#555",letterSpacing:"1px",textTransform:"uppercase" }}>{s.label}</div>
+              </div>
+            ))}
+          </div>
+          <div style={{ marginTop:"12px",background:"#1a1a1a",borderRadius:"100px",height:"4px" }}>
+            <div style={{ height:"100%",width:`${(currentDay/TOTAL_DAYS)*100}%`,background:`linear-gradient(90deg,${pc},${pc}88)`,borderRadius:"100px",transition:"width 0.3s" }} />
+          </div>
+        </div>
+
+        {/* DAY VIEW */}
+        {view==="day" && (
+          <div style={{ padding:"20px" }}>
+            <div style={{ display:"flex",alignItems:"center",gap:"12px",marginBottom:"20px" }}>
+              <button onClick={()=>goToDay(currentDay-1)} style={{ width:"36px",height:"36px",borderRadius:"50%",border:"1px solid #333",background:"transparent",color:"#aaa",fontSize:"16px",fontFamily:"inherit" }}>←</button>
+              <div style={{ flex:1,textAlign:"center" }}>
+                <div style={{ fontSize:"22px" }}>Hari {currentDay}</div>
+                <div style={{ fontSize:"12px",color:"#666" }}>{DAY_NAMES[dow]} · Bulan {month} · {phase.label}</div>
+              </div>
+              <button onClick={()=>goToDay(currentDay+1)} style={{ width:"36px",height:"36px",borderRadius:"50%",border:`1px solid ${pc}44`,background:"transparent",color:"#aaa",fontSize:"16px",fontFamily:"inherit" }}>→</button>
+            </div>
+
+            <div style={{ background:`${pc}15`,border:`1px solid ${pc}33`,borderRadius:"10px",padding:"10px 14px",marginBottom:"16px",display:"flex",justifyContent:"space-between" }}>
+              <span style={{ fontSize:"12px",color:pc }}>Fase {phase.id}: {phase.label}</span>
+              <span style={{ fontSize:"12px",color:"#777" }}>⏱ {totalMin} mnt</span>
+            </div>
+
+            <div style={{ marginBottom:"16px" }}>
+              <div style={{ display:"flex",justifyContent:"space-between",marginBottom:"6px" }}>
+                <span style={{ fontSize:"12px",color:"#666" }}>Progress hari ini</span>
+                <span style={{ fontSize:"12px",color:"#aaa" }}>{todayDone}/{tasks.length} · {doneMin}/{totalMin} mnt</span>
+              </div>
+              <div style={{ background:"#1a1a1a",borderRadius:"100px",height:"8px" }}>
+                <div style={{ height:"100%",width:`${tasks.length?(todayDone/tasks.length)*100:0}%`,background:pc,borderRadius:"100px",transition:"width 0.3s" }} />
+              </div>
+            </div>
+
+            <div style={{ display:"flex",flexDirection:"column",gap:"10px" }}>
+              {tasks.map((t,i) => {
+                const done = !!completed[`${currentDay}-${i}`];
+                return (
+                  <div key={i} onClick={()=>toggleTask(currentDay,i)} style={{ background:done?`${pc}18`:"#1a1a1a",border:`1px solid ${done?pc+"44":"#2a2a2a"}`,borderRadius:"12px",padding:"14px 16px",cursor:"pointer",transition:"all 0.15s",display:"flex",gap:"12px",alignItems:"flex-start" }}>
+                    <div style={{ width:"22px",height:"22px",borderRadius:"50%",flexShrink:0,border:`2px solid ${done?pc:"#444"}`,background:done?pc:"transparent",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"11px",color:"#fff",marginTop:"1px" }}>{done?"✓":""}</div>
+                    <div style={{ flex:1 }}>
+                      <div style={{ display:"flex",gap:"6px",marginBottom:"4px",alignItems:"center" }}>
+                        <span style={{ fontSize:"13px" }}>{t.lang}</span>
+                        <span style={{ fontSize:"10px",letterSpacing:"1px",color:done?pc:"#666",textTransform:"uppercase" }}>{t.tag}</span>
+                        <span style={{ marginLeft:"auto",fontSize:"11px",color:"#555" }}>⏱{t.duration}m</span>
+                      </div>
+                      <div style={{ fontSize:"14px",color:done?"#777":"#ddd",textDecoration:done?"line-through":"none",lineHeight:1.5 }}>{t.task}</div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {justCompleted && todayDone===tasks.length && tasks.length>0 && (
+              <div style={{ marginTop:"20px",background:`${pc}20`,border:`1px solid ${pc}44`,borderRadius:"12px",padding:"20px",textAlign:"center" }}>
+                <div style={{ fontSize:"28px",marginBottom:"6px" }}>🎉</div>
+                <div style={{ color:pc,fontWeight:"600",marginBottom:"6px" }}>Hari {currentDay} Selesai!</div>
+                <div style={{ color:"#888",fontSize:"13px",marginBottom:"16px" }}>Istirahat dulu, lanjut besok 💪</div>
+                <button onClick={()=>{goToDay(currentDay+1);setJustCompleted(false);}} style={{ padding:"10px 24px",borderRadius:"100px",border:"none",background:pc,color:"#fff",fontFamily:"inherit",fontSize:"13px",letterSpacing:"1px" }}>
+                  Hari {currentDay+1} →
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* OVERVIEW */}
+        {view==="overview" && (
+          <div style={{ padding:"20px" }}>
+            <div style={{ fontSize:"11px",letterSpacing:"3px",color:"#555",textTransform:"uppercase",marginBottom:"16px" }}>Semua 300 Hari — klik kotak untuk pindah</div>
+            {Array.from({length:10},(_,mi)=>mi+1).map(m=>{
+              const ph=getPhase(m);
+              const days=Array.from({length:30},(_,di)=>(m-1)*30+di+1);
+              const doneDays=days.filter(dayCompleted).length;
+              return (
+                <div key={m} style={{ marginBottom:"20px" }}>
+                  <div style={{ display:"flex",justifyContent:"space-between",marginBottom:"8px" }}>
+                    <div style={{ display:"flex",gap:"8px",alignItems:"center" }}>
+                      <div style={{ width:"8px",height:"8px",borderRadius:"50%",background:ph.color }} />
+                      <span style={{ fontSize:"13px",color:"#ccc" }}>Bulan {m}</span>
+                      <span style={{ fontSize:"11px",color:"#555" }}>— {ph.label}</span>
+                    </div>
+                    <span style={{ fontSize:"11px",color:"#666" }}>{doneDays}/30</span>
+                  </div>
+                  <div style={{ display:"grid",gridTemplateColumns:"repeat(10,1fr)",gap:"3px" }}>
+                    {days.map(d=>{
+                      const prog=dayProgress(d);
+                      const isCur=d===currentDay;
+                      return (
+                        <div key={d} onClick={()=>{goToDay(d);setView("day");}} title={`Hari ${d}`}
+                          style={{ height:"22px",borderRadius:"4px",cursor:"pointer",background:prog===1?ph.color:prog>0?`${ph.color}55`:"#1a1a1a",border:isCur?"2px solid #fff":`1px solid ${prog>0?ph.color+"44":"#252525"}`,transform:isCur?"scale(1.15)":"scale(1)",transition:"transform 0.1s" }}
+                        />
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })}
+
+            <div style={{ display:"flex",gap:"16px",fontSize:"11px",color:"#555",marginTop:"4px",flexWrap:"wrap" }}>
+              {[{bg:"#1a1a1a",border:"#333",label:"Belum"},{bg:"#E8643A55",border:"#E8643A44",label:"Sebagian"},{bg:"#E8643A",border:"none",label:"Selesai"},{bg:"transparent",border:"#fff",label:"Hari ini"}].map(l=>(
+                <div key={l.label} style={{ display:"flex",gap:"6px",alignItems:"center" }}>
+                  <div style={{ width:"12px",height:"12px",background:l.bg,border:`1px solid ${l.border}`,borderRadius:"2px" }} />
+                  <span>{l.label}</span>
+                </div>
+              ))}
+            </div>
+
+            <button onClick={()=>setShowReset(true)} style={{ marginTop:"28px",width:"100%",padding:"12px",borderRadius:"10px",border:"1px solid #2a2a2a",background:"transparent",color:"#555",fontFamily:"inherit",fontSize:"13px",letterSpacing:"1px" }}>
+              ↺ Reset Semua Progress
+            </button>
+          </div>
+        )}
+
+        <div style={{ borderTop:"1px solid #1a1a1a",padding:"14px 20px",textAlign:"center" }}>
+          <div style={{ fontSize:"11px",color:"#3a3a3a",fontStyle:"italic" }}>
+            Progress tersimpan di browser ini · {daysCompleted} hari selesai dari {TOTAL_DAYS}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+  </script>
+</body>
+                                                                                                  </html>
